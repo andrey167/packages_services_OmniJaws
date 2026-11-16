@@ -23,10 +23,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.android.internal.util.sakura.OmniJawsClient
 import com.android.axion.compose.theme.AxionTheme
 
-class WeatherDashboardActivity : ComponentActivity(), OmniJawsClient.OmniJawsObserver {
+class WeatherDashboardActivity : ComponentActivity() {
 
     private val viewModel: WeatherViewModel by viewModels()
 
@@ -51,22 +50,9 @@ class WeatherDashboardActivity : ComponentActivity(), OmniJawsClient.OmniJawsObs
 
     override fun onResume() {
         super.onResume()
-        OmniJawsClient.get().addObserver(this, this)
         viewModel.queryWeather()
     }
 
-    override fun onPause() {
-        super.onPause()
-        OmniJawsClient.get().removeObserver(this, this)
-    }
-
-    override fun weatherUpdated() {
-        viewModel.queryWeather()
-    }
-
-    override fun weatherError(errorReason: Int) {
-        viewModel.onWeatherError(errorReason)
-    }
 
     private fun openSettings() {
         startActivity(Intent(this, WeatherSettingsActivity::class.java))

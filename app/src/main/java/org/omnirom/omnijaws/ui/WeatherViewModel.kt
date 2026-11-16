@@ -22,7 +22,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.internal.util.sakura.OmniJawsClient
+import com.android.internal.util.android.OmniJawsClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,6 +46,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     private val _uiState = MutableStateFlow(WeatherUiState())
     private companion object {
         const val TAG = "WeatherDashboard"
+        const val EXTRA_ERROR_DISABLED = 2
     }
     val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
 
@@ -75,9 +76,9 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
             val previousError = _uiState.value.error
             val resolvedError = when {
                 info != null -> null
-                !Config.isEnabled(context) -> OmniJawsClient.EXTRA_ERROR_DISABLED
+                !Config.isEnabled(context) -> EXTRA_ERROR_DISABLED
                 previousError != null -> previousError
-                else -> OmniJawsClient.EXTRA_ERROR_DISABLED
+               else -> EXTRA_ERROR_DISABLED
             }
 
             _uiState.value = WeatherUiState(

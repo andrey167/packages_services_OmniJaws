@@ -30,10 +30,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.android.internal.util.sakura.OmniJawsClient
 import com.android.axion.compose.theme.AxionTheme
 
-class WeatherSettingsActivity : ComponentActivity(), OmniJawsClient.OmniJawsObserver {
+class WeatherSettingsActivity : ComponentActivity() {
 
     private val viewModel: SettingsViewModel by viewModels()
 
@@ -97,20 +96,13 @@ class WeatherSettingsActivity : ComponentActivity(), OmniJawsClient.OmniJawsObse
 
     override fun onResume() {
         super.onResume()
-        OmniJawsClient.get().addObserver(this, this)
         viewModel.loadSettings()
     }
 
     override fun onPause() {
         super.onPause()
-        OmniJawsClient.get().removeObserver(this, this)
     }
 
-    override fun weatherUpdated() {
-        viewModel.refreshUpdateStatus()
-    }
-
-    override fun weatherError(errorReason: Int) {}
 
     private fun requestLocationPermissionIfNeeded() {
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
